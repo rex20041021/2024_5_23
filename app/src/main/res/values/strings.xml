@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">test2</string>
+    <string name="acc">acc</string>
+    <string name="accvalue">X:\nY:\nZ:\n</string>
+    <string name="gyr">gyr</string>
+    <string name="gyrValue">X:\nY:\nX:\n</string>
+    <string name="mag">mag</string>
+    <string name="magValue">X:\nY:\nX:\n</string>
+</resources>
