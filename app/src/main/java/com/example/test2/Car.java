@@ -11,18 +11,21 @@ public class Car extends Character{
     Bitmap image;
     double speed;
     boolean counted = false;
+    Game game;
 
     // constructor
-    public Car(Context context, Bitmap image, double centerX, double centerY){
+    public Car(Context context, Bitmap image, double centerX, double centerY, Game game){
         super(centerX ,centerY);
         this.context = context;
+        this.game = game;
         this.image = image;
         this.setImageHeightAndWidth(image.getHeight(), image.getWidth());
+
     }
 
     // 每一幀要做的事(一直往下跑)
     public void update(){
-        speed = Game.getBackgroundSpeed();
+        speed = game.getBackgroundSpeed();
         this.setCenterY(this.getCenterY()+speed);
     }
 

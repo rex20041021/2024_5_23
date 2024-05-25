@@ -8,11 +8,13 @@ import android.util.Log;
 class AllBackground {
     Background background1;
     Background background2;
+    Game game;
 
     // constructor
-    AllBackground(Context context){
-        background1 = new Background(context, 0,0);
-        background2 = new Background(context, 0, 0);
+    AllBackground(Context context, Game game){
+        this.game = game;
+        background1 = new Background(context, 0,0, game);
+        background2 = new Background(context, 0, 0, game);
         background1.setLeftX(0);
         background1.setTopY(0);
         background2.setLeftX(0);
@@ -23,11 +25,11 @@ class AllBackground {
     public void update(){
         background1.update();
         background2.update();
-        if(background1.getTopY() >= Game.getHEIGHT()){
+        if(background1.getTopY() >= game.getHEIGHT()){
             background1.setBottomY(background2.getTopY());
         }
 
-        if(background2.getTopY() >= Game.getHEIGHT()){
+        if(background2.getTopY() >= game.getHEIGHT()){
             background2.setBottomY(background1.getTopY());
         }
     }

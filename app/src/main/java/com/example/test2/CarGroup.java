@@ -36,12 +36,14 @@ class CarGroup {
     boolean[][] alignment;
     // 亂數
     Random randomNumbers = new Random();
+    Game game;
 
 
     // consturctor
-    public CarGroup(Context context, HashMap<String, Bitmap[]> allImages , boolean[][] alignment){
+    public CarGroup(Context context, HashMap<String, Bitmap[]> allImages , boolean[][] alignment, Game game){
         this.allImages = allImages;
         this.alignment = alignment;
+        this.game = game;
         this.createCar(context);
     }
 
@@ -52,7 +54,12 @@ class CarGroup {
                 if(alignment[i][j]){
                     String color = carColor[randomNumbers.nextInt(5)];
                     int carType = randomNumbers.nextInt(5);
-                    cars.add(new Car(context, allImages.get(color)[carType], laneCenterx[j], -10000+carImageHeight*i));
+                    cars.add(new Car(context, allImages.get(color)[carType], laneCenterx[j], -10000+carImageHeight*i, game));
+                }
+                else {
+                    if(randomNumbers.nextInt(10) < 1){
+                        game.createPower(laneCenterx[j], -10000+carImageHeight*i, "random");
+                    }
                 }
             }
         }

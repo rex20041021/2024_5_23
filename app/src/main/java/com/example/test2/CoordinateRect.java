@@ -15,6 +15,7 @@ public class CoordinateRect {
     public CoordinateRect(double centerX, double centerY){
         this.centerX = centerX;
         this.centerY = centerY;
+        setCoordinate();
     }
 
     public void setImageHeight(double imageHeight) {

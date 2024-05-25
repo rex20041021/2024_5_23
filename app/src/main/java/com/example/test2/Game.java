@@ -18,6 +18,9 @@ import android.widget.Switch;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 // 主要遊戲迴圈
 class Game extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -48,7 +51,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     // 所有車的管理員
     private AllCar allCar;
 
+    private static ArrayList<Power> allPower = new ArrayList<Power>();
+
+
     public static long now;
+    private boolean isGameover = false;
 
 
 
@@ -72,17 +79,20 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         WIDTH = displayMetrics.widthPixels;
 
         // 初始化player
-        player = new Player(this.context, WIDTH/2, HEIGHT -500);
+        player = new Player(this.context, WIDTH/2, HEIGHT -500, this);
         player.setCenterX(WIDTH/2);
         player.setBottomY(HEIGHT-100);
         // 初始化背景
-        allBackground = new AllBackground(context);
+        allBackground = new AllBackground(context, this);
         // 初始化車車
-        allCar = new AllCar(context);
+        allCar = new AllCar(context, this);
+
 
         String surfaceState = "";
 
         setFocusable(true);
+
+        this.createPower(100, 100, "shield");
     }
 
     // 偵測觸控事件
@@ -142,17 +152,20 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-//        Bitmap img = BitmapFactory.decodeResource(context.getResources(), R.drawable.car_black_4);
-//        canvas.drawBitmap(img, 0, 0, new Paint());
 
         allBackground.draw(canvas);
         player.draw(canvas);
         allCar.draw(canvas);
+        for(Power power :allPower){
+            power.draw(canvas);
+        }
         drawText(canvas, "UPS: "+gameLoop.getAverageUPS(), 100, 100, 50);
         drawText(canvas, "FPS: "+gameLoop.getAverageFPS(), 100, 200, 50);
         drawText(canvas, "SPEED: "+backgroundSpeed, 100, 300, 50);
         drawText(canvas, "COLLIDE: "+collideNum, 100, 400, 50);
-
+        if(isGameover){
+            drawText(canvas, "GAMEOVER", 10, HEIGHT/2, 150);
+        }
 
     }
 
@@ -173,6 +186,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         allBackground.update();
         player.update();
         allCar.update();
+        for(Power power :allPower){
+            power.update();
+            if (Character.isCollide(power, player)){
+                player.getPower(power.getType());
+            }
+        }
         now=System.currentTimeMillis();
     }
 
@@ -211,6 +230,25 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    public void createPower(double centerX, double centerY, String type){
+        if(type.equals("random")){
+            Random random = new Random();
+            if(random.nextInt(10)<3){
+                type = "inverse";
+            }
+            else {
+                type = "shield";
+            }
+        }
+        Power power = new Power(this.context, centerX, centerY, type, this);
+        allPower.add(power);
+
+    }
+
+    public void setGameover(){
+        isGameover = true;
+    }
+
     // 加速規感應的數字
     public void setSensorDx(double dx){
         sensorDx = dx;
@@ -222,18 +260,22 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     // 回傳視窗高度
-    public static double getHEIGHT(){
+    public double getHEIGHT(){
         return HEIGHT;
     }
 
     // 回傳視窗寬度
-    public static double getWIDTH() {
+    public double getWIDTH() {
         return WIDTH;
     }
 
     // 回傳背景捲動速度
-    public static double getBackgroundSpeed() {
+    public double getBackgroundSpeed() {
         return backgroundSpeed;
+    }
+
+    public long getNow(){
+        return now;
     }
 
     // onPause會call這個函數

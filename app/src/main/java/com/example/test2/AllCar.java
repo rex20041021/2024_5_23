@@ -8,6 +8,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +34,8 @@ class AllCar {
     final int carImageHeight = (int)(400*0.8); //其實是393
     // 亂數
     Random randomNumbers = new Random();
+
+    Game game;
     // 所有車群的種類
     ArrayList<boolean[][]> allGroupType = new ArrayList<boolean[][]>(Arrays.asList(
             new boolean[][] {
@@ -82,8 +86,9 @@ class AllCar {
     ));
 
     // constructor
-    public AllCar(Context context){
+    public AllCar(Context context, Game game){
         this.context = context;
+        this.game = game;
         this.load_image(context);
         this.createCarGroup(0);
     }
@@ -111,11 +116,11 @@ class AllCar {
         nowNum++;
         if(nowNum==maxCarGroupNum) nowNum = 0;
         // 還沒創滿
-        if (allCarGroup.size()<=maxCarGroupNum) {
-            allCarGroup.add(new CarGroup(context, allImages, allGroupType.get(type)));
+        if (allCarGroup.size()<maxCarGroupNum) {
+            allCarGroup.add(new CarGroup(context, allImages, allGroupType.get(type), game));
         }
         else {
-            allCarGroup.set(nowNum, new CarGroup(context, allImages, allGroupType.get(type)));
+            allCarGroup.set(nowNum, new CarGroup(context, allImages, allGroupType.get(type), game));
         }
     }
 
@@ -133,8 +138,7 @@ class AllCar {
                 creating = false;
             }
         }
-        // debug的，不用管
-        Log.d("ttt", nowNum+"");
+        Log.d("tag", game.getBackgroundSpeed()+"");
         for(CarGroup carGroup: allCarGroup){
             carGroup.update();
         }
@@ -144,9 +148,11 @@ class AllCar {
     // 畫到畫布上
     public void draw(Canvas canvas){
         for (CarGroup carGroup: allCarGroup){
-            if(carGroup.getBottomCarY() >= -carImageHeight && carGroup.getTopCarY() <= Game.getHEIGHT())
-            carGroup.draw(canvas);
+            if(carGroup.getBottomCarY() >= -carImageHeight && carGroup.getTopCarY() <= game.getHEIGHT()){
+                carGroup.draw(canvas);
+            }
         }
+
 
     }
 
