@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Vibrator;
-
+import android.media.MediaPlayer;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,11 +21,12 @@ class CarGroup {
     // 這個車群所有的車
     ArrayList<Car> cars = new ArrayList<Car>();
     Context context;
-    // 車道中心
+    // 車道中心(on my phone)
     //  0:      130
     //  1:      420
     //  2:      680
     //  3:      980
+    // Height: 2282.0, Width:1080.0
     int[] laneCenterx = {130, 420, 680, 980};
     // 所有圖片
     HashMap<String, Bitmap[]> allImages;
@@ -37,6 +38,7 @@ class CarGroup {
     // 亂數
     Random randomNumbers = new Random();
     Game game;
+    MediaPlayer audioPlayer;
 
 
     // consturctor
@@ -45,6 +47,12 @@ class CarGroup {
         this.alignment = alignment;
         this.game = game;
         this.createCar(context);
+        this.context = context;
+        audioPlayer = MediaPlayer.create(this.context, R.raw.car_crash);
+        for(int i=0; i<laneCenterx.length; i++){
+            laneCenterx[i] =(int) game.getWIDTH() * (laneCenterx[i]/1080);
+        }
+
     }
 
     // 創造車車
@@ -96,6 +104,7 @@ class CarGroup {
                 Game.CollideNumAddOne();
                 car.counted = true;
                 player.getHurt();
+                audioPlayer.start();
             }
         }
     }

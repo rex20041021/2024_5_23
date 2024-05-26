@@ -14,6 +14,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Switch;
+import android.media.MediaPlayer;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -57,6 +58,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public static long now;
     private boolean isGameover = false;
 
+    private String status = "start";
+    private int endMode = 1;
+
+    MediaPlayer bgmPlayer;
 
 
     // constructor
@@ -77,7 +82,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         HEIGHT = displayMetrics.heightPixels + getNavigationBarHeight();
         WIDTH = displayMetrics.widthPixels;
-
         // 初始化player
         player = new Player(this.context, WIDTH/2, HEIGHT -500, this);
         player.setCenterX(WIDTH/2);
@@ -89,10 +93,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
 
         String surfaceState = "";
+        bgmPlayer = MediaPlayer.create(this.context, R.raw.paris);
+        bgmPlayer.setLooping(true);
+        bgmPlayer.start();
+        this.createPower(100, 100, "shield");
 
         setFocusable(true);
-
-        this.createPower(100, 100, "shield");
     }
 
     // 偵測觸控事件
@@ -102,7 +108,16 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getAction()){
             // 有手指落下或放著的話
             case MotionEvent.ACTION_DOWN:
+                if (status.equals("start")){
+                    status = "run";
+                }
+                else if (status.equals("end")) {
+                    status = "start";
+                    collideNum = 0;
+                }
+                // 手指放著
             case MotionEvent.ACTION_MOVE:
+
                 // 看所有手指的位置偵測要break還是accelerate (break最大)
                 for(int i=0; i<event.getPointerCount(); i++){
                     if(event.getX(i) < WIDTH/2) {
@@ -153,20 +168,82 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        allBackground.draw(canvas);
-        player.draw(canvas);
-        allCar.draw(canvas);
-        for(Power power :allPower){
-            power.draw(canvas);
-        }
-        drawText(canvas, "UPS: "+gameLoop.getAverageUPS(), 100, 100, 50);
-        drawText(canvas, "FPS: "+gameLoop.getAverageFPS(), 100, 200, 50);
-        drawText(canvas, "SPEED: "+backgroundSpeed, 100, 300, 50);
-        drawText(canvas, "COLLIDE: "+collideNum, 100, 400, 50);
-        if(isGameover){
-            drawText(canvas, "GAMEOVER", 10, HEIGHT/2, 150);
+        if (status.equals("start")) {
+            Paint paint = new Paint();
+            Bitmap image = BitmapFactory.decodeResource(context.getResources(), R.drawable.screen_test);
+            image = Bitmap.createScaledBitmap( image, (int)(image.getWidth()*0.6), (int)(image.getHeight()*0.6), true);
+            // 獲取畫布的寬度和高度
+            int canvasWidth = canvas.getWidth();
+            int canvasHeight = canvas.getHeight();
+
+            // 獲取位圖的寬度和高度
+            int imageWidth = image.getWidth();
+            int imageHeight = image.getHeight();
+
+            // 計算圖片的左上角位置，使其中心與畫布中心對齊
+            float left = (canvasWidth - imageWidth) / 2.0f;
+            float top = (canvasHeight - imageHeight) / 2.0f;
+
+            // 繪製位圖
+            canvas.drawBitmap(image, left, top, paint);
         }
 
+        else if (status.equals("run")) {
+            Log.d("ooo", "run");
+            allBackground.draw(canvas);
+            player.draw(canvas);
+            allCar.draw(canvas);
+            for(Power power :allPower){
+                power.draw(canvas);
+            }
+            drawText(canvas, "UPS: "+gameLoop.getAverageUPS(), 100, 100, 50);
+            drawText(canvas, "FPS: "+gameLoop.getAverageFPS(), 100, 200, 50);
+            drawText(canvas, "SPEED: "+backgroundSpeed, 100, 300, 50);
+            drawText(canvas, "COLLIDE: "+collideNum, 100, 400, 50);
+            if(isGameover){
+                drawText(canvas, "GAMEOVER", 10, HEIGHT/2, 150);
+            }
+
+        }
+        else if (status.equals("end")) {
+            Paint paint = new Paint();
+            if (endMode > 0) {
+                Bitmap image = BitmapFactory.decodeResource(context.getResources(), R.drawable.end_3);
+                image = Bitmap.createScaledBitmap( image, (int)(image.getWidth()*0.6), (int)(image.getHeight()*0.6), true);
+                // 獲取畫布的寬度和高度
+                int canvasWidth = canvas.getWidth();
+                int canvasHeight = canvas.getHeight();
+
+                // 獲取位圖的寬度和高度
+                int imageWidth = image.getWidth();
+                int imageHeight = image.getHeight();
+
+                // 計算圖片的左上角位置，使其中心與畫布中心對齊
+                float left = (canvasWidth - imageWidth) / 2.0f;
+                float top = (canvasHeight - imageHeight) / 2.0f;
+
+                // 繪製位圖
+                canvas.drawBitmap(image, left, top, paint);
+            }
+            else if (endMode == 0) {
+                Bitmap image = BitmapFactory.decodeResource(context.getResources(), R.drawable.end_1);
+                image = Bitmap.createScaledBitmap( image, (int)(image.getWidth()*0.6), (int)(image.getHeight()*0.6), true);
+                // 獲取畫布的寬度和高度
+                int canvasWidth = canvas.getWidth();
+                int canvasHeight = canvas.getHeight();
+
+                // 獲取位圖的寬度和高度
+                int imageWidth = image.getWidth();
+                int imageHeight = image.getHeight();
+
+                // 計算圖片的左上角位置，使其中心與畫布中心對齊
+                float left = (canvasWidth - imageWidth) / 2.0f;
+                float top = (canvasHeight - imageHeight) / 2.0f;
+
+                // 繪製位圖
+                canvas.drawBitmap(image, left, top, paint);
+            }
+        }
     }
 
     // 畫文字的函數，x跟y是左上角的座標
@@ -181,18 +258,25 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     // 每一幀要做的事
     public void update() {
         Log.d("speed", backgroundSpeed+"");
-        this.updateCollideNum();
-        this.speedUpdate();
-        allBackground.update();
-        player.update();
-        allCar.update();
-        for(Power power :allPower){
-            power.update();
-            if (Character.isCollide(power, player)){
-                player.getPower(power.getType());
+
+        if (status.equals("run")) {
+            this.updateCollideNum();
+            this.speedUpdate();
+            allBackground.update();
+            player.update();
+            allCar.update();
+            for(Power power :allPower){
+                power.update();
+                if (Character.isCollide(power, player)){
+                    player.getPower(power.getType());
+                }
             }
         }
+        if (status.equals("end")) {
+            endMode = (endMode + 1) % 3;
+        }
         now=System.currentTimeMillis();
+
     }
 
     // 更新撞到車子的數量
@@ -245,8 +329,17 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    public void pauseBGM(){
+        bgmPlayer.pause();
+    }
+
+    public void resumeBGM(){
+        bgmPlayer.start();
+    }
+
     public void setGameover(){
         isGameover = true;
+        status = "end";
     }
 
     // 加速規感應的數字

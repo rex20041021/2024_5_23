@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onResume() {
         super.onResume();
+        game.resumeBGM();
         mSensorManager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onPause() {
         game.pause();
+        game.pauseBGM();
         mSensorManager.unregisterListener(this);
         super.onPause();
     }
