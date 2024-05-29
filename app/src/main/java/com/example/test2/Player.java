@@ -76,6 +76,15 @@ class Player extends Character{
         }
     }
 
+    public boolean hasShield(){
+        if(isShield){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 
     public void getPower(String type) {
         switch (type){

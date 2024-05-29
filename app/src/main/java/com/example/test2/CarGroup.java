@@ -40,7 +40,7 @@ class CarGroup {
     // 亂數
     Random randomNumbers = new Random();
     Game game;
-    MediaPlayer audioPlayer;
+    MediaPlayer collidePlayer;
 
 
     // consturctor
@@ -53,7 +53,8 @@ class CarGroup {
         }
         this.createCar(context);
         this.context = context;
-        audioPlayer = MediaPlayer.create(this.context, R.raw.car_crash);
+        collidePlayer = MediaPlayer.create(this.context, R.raw.car_crash);
+        collidePlayer.setVolume(10, 10);
 
 
     }
@@ -108,7 +109,11 @@ class CarGroup {
                 Game.CollideNumAddOne();
                 car.counted = true;
                 player.getHurt();
-                audioPlayer.start();
+                collidePlayer.setVolume(1, 1);
+                if(player.hasShield() == false){
+                    collidePlayer.start();
+                }
+
             }
         }
     }

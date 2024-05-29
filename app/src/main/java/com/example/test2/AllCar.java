@@ -136,6 +136,7 @@ class AllCar {
     // 創建車群
     public void createCarGroup(int type){
         nowNum++;
+        Log.d("teest", "999"+allCarGroup.size());
         if(nowNum==maxCarGroupNum) nowNum = 0;
         // 還沒創滿
         if (allCarGroup.size()<maxCarGroupNum) {
@@ -144,10 +145,13 @@ class AllCar {
         else {
             allCarGroup.set(nowNum, new CarGroup(context, allImages, allGroupType.get(type), game));
         }
+        Log.d("teest", "size:"+allCarGroup.size()+",8000");
     }
 
     // 每一幀要做的事
     public void update(){
+        if(allCarGroup.size() == 0) return;
+        Log.d("teest", nowNum+","+allCarGroup.size()+",900000");
         if(!creating){
             type = randomNumbers.nextInt(allGroupType.size());
             creating = true;
