@@ -23,14 +23,16 @@ class Player extends Character{
     private double speed = 15;
     private double sensorDx;
 
+    private boolean canMove;
+
     private boolean hidden = false;
     private long hide_time;
 
     private boolean isShield = false;
     private long shieldTime;
 
-    private boolean isInverse = false;
-    private long inverseTime;
+    private boolean isFreeze = false;
+    private long freezeTime;
 
     Paint shieldPaint = new Paint();
 
@@ -52,8 +54,11 @@ class Player extends Character{
 
     // 移動
     public void move(double speed){
-        this.sensorDx = -Game.getSensorDx();
-        this.setCenterX(this.getCenterX() + speed*sensorDx);
+        if(canMove){
+            this.sensorDx = -Game.getSensorDx();
+            this.setCenterX(this.getCenterX() + speed*sensorDx);
+        }
+
     }
 
     // player受傷函式
@@ -78,9 +83,9 @@ class Player extends Character{
                 isShield = true;
                 shieldTime = System.currentTimeMillis();
                 break;
-            case "inverse":
-                isInverse = true;
-                inverseTime = System.currentTimeMillis();
+            case "freeze":
+                isFreeze = true;
+                freezeTime = System.currentTimeMillis();
                 break;
         }
     }
@@ -94,16 +99,16 @@ class Player extends Character{
 
     // 每一幀要做的事
     public void update() {
-        if(isInverse && game.getNow() - inverseTime >3000){
-            isInverse = false;
+        if(isFreeze && game.getNow() - freezeTime >3000){
+            isFreeze = false;
         }
 
         if(isShield && game.getNow() - shieldTime >3000){
             isShield = false;
         }
 
-        if(isInverse){
-            this.move(-speed);
+        if(isFreeze){
+            this.move(3);
         }
         else {
             this.move(speed);
@@ -123,6 +128,15 @@ class Player extends Character{
             isShield = true;
             shieldTime = game.getNow();
         }
+
+        game.setFreeze(isFreeze);
+
+        if(game.getBackgroundSpeed() == 0){
+            canMove = false;
+        }
+        else {
+            canMove = true;
+        }
     }
 
     // 畫到畫布上
@@ -132,6 +146,11 @@ class Player extends Character{
             shieldPaint.setAlpha((int)((1 - ( (game.getNow() - shieldTime) /3000.0 ))*100) );
             Log.d("shield", ((game.getNow() - shieldTime)) /3000.0 +"");
             canvas.drawCircle((float) this.getCenterX(), (float) this.getCenterY(), 200, shieldPaint);
+            game.drawBar(canvas, 300*(1 - (float)(game.getNow() - shieldTime)/3000), 100, 200, "green", 300);
+        }
+
+        if(isFreeze){
+            game.drawBar(canvas, 300*(1 - (float)(game.getNow() - freezeTime)/3000), 100, 300, "blue", 300);
         }
     }
 
@@ -148,4 +167,12 @@ class Player extends Character{
         }
     }
 
+    public void initialize() {
+        this.setCenterX(game.getWIDTH()/2);
+        this.setBottomY(game.getHEIGHT()-100);
+        HP = 2;
+        this.hidden = false;
+        this.isFreeze = false;
+        this.isShield = false;
+    }
 }

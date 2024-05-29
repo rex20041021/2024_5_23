@@ -9,6 +9,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Vibrator;
 import android.media.MediaPlayer;
+import android.util.Log;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,17 +48,19 @@ class CarGroup {
         this.allImages = allImages;
         this.alignment = alignment;
         this.game = game;
+        for(int i=0; i<laneCenterx.length; i++){
+            laneCenterx[i] =(int) (game.getWIDTH() * (laneCenterx[i]/1080.0));
+        }
         this.createCar(context);
         this.context = context;
         audioPlayer = MediaPlayer.create(this.context, R.raw.car_crash);
-        for(int i=0; i<laneCenterx.length; i++){
-            laneCenterx[i] =(int) game.getWIDTH() * (laneCenterx[i]/1080);
-        }
+
 
     }
 
     // 創造車車
     public void createCar(Context context){
+        Log.d("lane", 1+":"+laneCenterx[1]);
         for(int i=0; i<alignment.length; i++) {
             for(int j=0; j<alignment[i].length; j++){
                 if(alignment[i][j]){

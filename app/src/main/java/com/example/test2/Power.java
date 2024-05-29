@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.widget.Switch;
 
 public class Power extends Character{
@@ -12,6 +13,7 @@ public class Power extends Character{
     Bitmap img;
     Context context;
     Game game;
+    boolean show = true;
 
     public Power(Context context, double centerX, double centerY, String type, Game game){
         super(centerX, centerY);
@@ -21,13 +23,18 @@ public class Power extends Character{
         switch (type){
             case "shield":
                 img = BitmapFactory.decodeResource(context.getResources(), R.drawable.power_red_shield);
+                img = Bitmap.createScaledBitmap( img, 99, 99, true);
                 this.setImageHeightAndWidth(img.getHeight(), img.getWidth());
                 break;
-            case "inverse":
-                img = BitmapFactory.decodeResource(context.getResources(), R.drawable.power_red_inverse);
+            case "freeze":
+                img = BitmapFactory.decodeResource(context.getResources(), R.drawable.power_blue_freeze);
+                img = Bitmap.createScaledBitmap( img, 99, 99, true);
                 this.setImageHeightAndWidth(img.getHeight(), img.getWidth());
                 break;
         }
+//        Log.d("power", img.getHeight()+","+img.getHeight());
+//        System.out.println(img.getHeight());
+//        System.out.println(img.getWidth());
     }
 
 
@@ -36,10 +43,16 @@ public class Power extends Character{
     }
 
     public void draw(Canvas canvas){
-        super.drawImage(canvas, img);
+        if(show){
+            super.drawImage(canvas, img);
+        }
     }
 
     public String getType() {
         return type;
+    }
+
+    public void setVisble(boolean visble){
+        show = visble;
     }
 }

@@ -34,7 +34,7 @@ public abstract class Character extends CoordinateRect{
 
     // 判斷是否碰撞
     public static boolean isCollide(Character a, Character b){
-        if(a.getRightX() <= b.getLeftX() || a.getLeftX() >= b.getRightX() || a.getBottomY() <= b.getTopY() || a.getTopY() >= b.getBottomY()){
+        if(a.getRightX() <= b.getLeftX() + 10 || a.getLeftX() + 10 >= b.getRightX() || a.getBottomY() <= b.getTopY()+10|| a.getTopY()+10 >= b.getBottomY()){
             return false;
         }
         return  true;

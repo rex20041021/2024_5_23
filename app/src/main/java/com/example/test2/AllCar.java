@@ -78,6 +78,28 @@ class AllCar {
             new boolean[][]{
                     {false, false, true, false},
                     {false, true, false, true}
+            },
+            new boolean[][]{
+                    {true, false, true, true},
+                    {true, false, true, true},
+                    {true, false, false, true},
+                    {true, false, false, true},
+                    {true, true, false, true},
+                    {true, true, false, true},
+            },
+            new boolean[][]{
+                    {true, false, true, true},
+                    {true, false, true, true},
+                    {true, false, false, true},
+                    {true, false, false, true},
+                    {true, false, false, true},
+                    {true, false, false, true},
+            },
+            new boolean[][]{
+                    {true, false, false, true},
+                    {true, false, false, true},
+                    {true, false, false, true},
+
             }
 
 
@@ -161,5 +183,12 @@ class AllCar {
         for(CarGroup carGroup: allCarGroup){
             carGroup.updateCollideNum(player);
         }
+    }
+
+    public void initialize() {
+        allCarGroup.clear();
+        nowNum = -1;
+        creating = false;
+        this.createCarGroup(0);
     }
 }

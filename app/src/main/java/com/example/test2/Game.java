@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -61,8 +62,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private String status = "start";
     private int endMode = 1;
 
+    private int score = 0;
     MediaPlayer bgmPlayer;
 
+    private Paint freezePaint;
+    private boolean isFreeze = false;
 
     // constructor
     // 在這邊放要在遊戲迴圈前做的事
@@ -90,6 +94,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         allBackground = new AllBackground(context, this);
         // 初始化車車
         allCar = new AllCar(context, this);
+        freezePaint = new Paint();
+        freezePaint.setColor(ContextCompat.getColor(context, R.color.freezeBlue));
+        freezePaint.setAlpha(100);
 
 
         String surfaceState = "";
@@ -114,6 +121,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 else if (status.equals("end")) {
                     status = "start";
                     collideNum = 0;
+                    this.initialize();
                 }
                 // 手指放著
             case MotionEvent.ACTION_MOVE:
@@ -196,14 +204,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             for(Power power :allPower){
                 power.draw(canvas);
             }
-            drawText(canvas, "UPS: "+gameLoop.getAverageUPS(), 100, 100, 50);
+//            drawText(canvas, "UPS: "+gameLoop.getAverageUPS(), 100, 100, 50);
             drawText(canvas, "FPS: "+gameLoop.getAverageFPS(), 100, 200, 50);
-            drawText(canvas, "SPEED: "+backgroundSpeed, 100, 300, 50);
-            drawText(canvas, "COLLIDE: "+collideNum, 100, 400, 50);
-            if(isGameover){
-                drawText(canvas, "GAMEOVER", 10, HEIGHT/2, 150);
+//            drawText(canvas, "SPEED: "+backgroundSpeed, 100, 300, 50);
+            drawText(canvas, "SCORE: "+score, 100, 400, 50);
+            drawBar(canvas, 300*(backgroundSpeed/backgroundMaxSpeed), 100, 100, "red", 300);
+            if(isFreeze){
+                canvas.drawRect(0, 0, (float) WIDTH+1000, (float) HEIGHT+1000, freezePaint);
             }
-
         }
         else if (status.equals("end")) {
             Paint paint = new Paint();
@@ -224,6 +232,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
                 // 繪製位圖
                 canvas.drawBitmap(image, left, top, paint);
+                Paint textPaint = new Paint();
+                textPaint.setTextAlign(Paint.Align.CENTER);
+                textPaint.setTextSize(50);
+                textPaint.setColor(ContextCompat.getColor(context, R.color.magenta));
+                int xPos = (int)(WIDTH / 2);
+                int yPos = (int) ((HEIGHT / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)) ;
+                //((textPaint.descent() + textPaint.ascent()) / 2) is the distance from the baseline to the center.
+
+                canvas.drawText("SCORE:"+score, xPos, yPos, textPaint);
             }
             else if (endMode == 0) {
                 Bitmap image = BitmapFactory.decodeResource(context.getResources(), R.drawable.end_1);
@@ -255,11 +272,27 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawText(value ,(float) x, (float) y, paint);
     }
 
+    public void drawBar(Canvas canvas, double value, double x, double y, String color, double length){
+        Paint hollowPaint = new Paint();
+        hollowPaint.setStyle(Paint.Style.STROKE);
+        hollowPaint.setStrokeWidth(5);
+        Paint solidPaint = new Paint();
+        solidPaint.setStyle(Paint.Style.FILL);
+        int ID = context.getResources().getIdentifier(color,"color",context.getPackageName());
+        int showColor = ContextCompat.getColor(context, ID);
+        solidPaint.setColor(showColor);
+        canvas.drawRect((float)x, (float) y, (float)( x+value ), (float)( y+50 ), solidPaint);
+        canvas.drawRect((float)x, (float) y, (float)( x+length), (float)( y+50 ), hollowPaint);
+
+    }
+
     // 每一幀要做的事
     public void update() {
-        Log.d("speed", backgroundSpeed+"");
+        Log.d("player", player.getBottomY()+"");
+        Log.d("player", HEIGHT+"");
 
         if (status.equals("run")) {
+            score += backgroundSpeed/10;
             this.updateCollideNum();
             this.speedUpdate();
             allBackground.update();
@@ -269,6 +302,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 power.update();
                 if (Character.isCollide(power, player)){
                     player.getPower(power.getType());
+                    power.setVisble(false);
+                    Log.d("power", power.getType());
                 }
             }
         }
@@ -314,11 +349,21 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    public void initialize(){
+        allBackground.initialize();
+        player.initialize();
+        allCar.initialize();
+        allPower.clear();
+        isGameover = false;
+        score = 0;
+        backgroundSpeed = backgroundNormalSpeed;
+    }
+
     public void createPower(double centerX, double centerY, String type){
         if(type.equals("random")){
             Random random = new Random();
             if(random.nextInt(10)<3){
-                type = "inverse";
+                type = "freeze";
             }
             else {
                 type = "shield";
@@ -340,6 +385,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void setGameover(){
         isGameover = true;
         status = "end";
+    }
+
+    public void setFreeze(boolean isFreeze){
+        this.isFreeze = isFreeze;
     }
 
     // 加速規感應的數字
