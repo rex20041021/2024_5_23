@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -84,6 +85,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     MediaPlayer accPlayer;
     MediaPlayer brakePlayer;
 
+    Typeface tf;
 
     // constructor
     // 在這邊放要在遊戲迴圈前做的事
@@ -155,6 +157,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         accPlayer.setLooping(true);
         brakePlayer.setLooping(true);
 
+        tf =Typeface.createFromAsset(context.getAssets(), "fonts/font.ttf");
+//        tf = Typeface.createFromFile(getResources()+"font/font.ttf");
 
 
 
@@ -182,6 +186,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                             && event.getY(i) <= HEIGHT * 0.05 + pausebutton1.getHEIGHT() / 2
                             && status.equals("run")) {
                         status = "pause";
+                        bgm2Player.pause();
+                        pausePlayer.start();
                         Log.d("status", status);
                     }
                     //開始鍵
@@ -190,10 +196,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                             && HEIGHT * 0.8 - continuebutton_2.getHEIGHT() / 2 <= event.getY(i)
                             && event.getY(i) <= HEIGHT * 0.8 + continuebutton_2.getHEIGHT() / 2) {
                         if (status.equals("start") || status.equals("pause") || status.equals("end")) {
-                            status = "run";
                             if(!status.equals("pause")){
                                 this.initialize();
                             }
+                            else {
+                                pausePlayer.pause();
+                            }
+                            status = "run";
                             start2Player.pause();
                             bgm2Player.start();
                         }
@@ -259,6 +268,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                             && event.getY(i) <= HEIGHT * 0.8 + homebutton_1.getHEIGHT() / 2) {
                         if (status.equals("pause") || status.equals("end")) {
                             status = "start";
+                            pausePlayer.pause();
                             deadPlayer.pause();
                             bgm2Player.pause();
                             start2Player.start();
@@ -307,6 +317,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             Bitmap image = BitmapFactory.decodeResource(context.getResources(), R.drawable.open_1);
             double ratio = WIDTH / image.getWidth();
             image = Bitmap.createScaledBitmap( image, (int)(image.getWidth()*ratio), (int)(image.getHeight()*ratio), true);
+            image = Bitmap.createScaledBitmap( image, (int)WIDTH, (int)HEIGHT, true);
 
             // 獲取位圖的寬度和高度
             int imageWidth = image.getWidth();
@@ -331,9 +342,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 power.draw(canvas);
             }
 //            drawText(canvas, "UPS: "+gameLoop.getAverageUPS(), 100, 100, 50);
-            drawText(canvas, "FPS: "+gameLoop.getAverageFPS(), 100, 200, 50);
+//            drawText(canvas, "FPS: "+gameLoop.getAverageFPS(), 100, 200, 50);
 //            drawText(canvas, "SPEED: "+backgroundSpeed, 100, 300, 50);
-            drawText(canvas, "SCORE: "+score, 100, 400, 50);
+            drawText(canvas, "SCORE: "+score, 100, 60, 50);
             drawBar(canvas, 300*(backgroundSpeed/backgroundMaxSpeed), 100, 100, "red", 300);
             if(isFreeze){
                 canvas.drawRect(0, 0, (float) WIDTH+1000, (float) HEIGHT+1000, freezePaint);
@@ -361,7 +372,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             homebutton_1.draw(canvas);
         }
 
-        if (status.equals("instruction")) {
+        else if (status.equals("instruction")) {
             Paint paint = new Paint();
             Bitmap image = BitmapFactory.decodeResource(context.getResources(), R.drawable.instructions_1);
             double ratio = WIDTH / image.getWidth();
@@ -393,10 +404,28 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             float left = (canvasWidth - imageWidth) / 2.0f;
             float top = (canvasHeight - imageHeight) / 2.0f;
 
+
+            canvas.drawBitmap(image, left, top, paint);
+            Paint textPaint = new Paint();
+            textPaint.setTextAlign(Paint.Align.CENTER);
+            textPaint.setTextSize(70);
+            textPaint.setColor(ContextCompat.getColor(context, R.color.white));
+            textPaint.setTypeface(tf);
+            int xPos = (int)(WIDTH / 2);
+            int yPos = (int) ((HEIGHT / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)) ;
+            //((textPaint.descent() + textPaint.ascent()) / 2) is the distance from the baseline to the center.
+
+
+
+
             // 繪製位圖
             canvas.drawBitmap(image, left, top, paint);
+            canvas.drawText("SCORE:"+score, xPos, yPos, textPaint);
+
             continuebutton_1.draw(canvas);
             homebutton_2.draw(canvas);
+
+
         }
     }
 
@@ -407,6 +436,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         int color = ContextCompat.getColor(context, R.color.magenta);
         paint.setColor(color);
         paint.setTextSize((float) size);
+        paint.setTypeface(tf);
         canvas.drawText(value ,(float) x, (float) y, paint);
     }
 

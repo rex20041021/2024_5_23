@@ -109,7 +109,7 @@ class CarGroup {
                 Game.CollideNumAddOne();
                 car.counted = true;
                 player.getHurt();
-                collidePlayer.setVolume(1, 1);
+                collidePlayer.setVolume(500.0f, 500.0f);
                 if(player.hasShield() == false){
                     collidePlayer.start();
                 }
