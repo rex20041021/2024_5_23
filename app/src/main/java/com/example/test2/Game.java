@@ -336,14 +336,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         else if (status.equals("run")) {
             Log.d("ooo", "run");
             allBackground.draw(canvas);
-            player.draw(canvas);
             allCar.draw(canvas);
+            player.draw(canvas);
             for(Power power :allPower){
                 power.draw(canvas);
             }
-//            drawText(canvas, "UPS: "+gameLoop.getAverageUPS(), 100, 100, 50);
-//            drawText(canvas, "FPS: "+gameLoop.getAverageFPS(), 100, 200, 50);
-//            drawText(canvas, "SPEED: "+backgroundSpeed, 100, 300, 50);
             drawText(canvas, "SCORE: "+score, 100, 60, 50);
             drawBar(canvas, 300*(backgroundSpeed/backgroundMaxSpeed), 100, 100, "red", 300);
             if(isFreeze){
