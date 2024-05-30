@@ -84,6 +84,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     MediaPlayer pausePlayer;
     MediaPlayer accPlayer;
     MediaPlayer brakePlayer;
+    int pauseTimes = 0;
+
 
     Typeface tf;
 
@@ -174,7 +176,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getAction()){
             // 有手指落下或放著的話
             case MotionEvent.ACTION_DOWN:
-                Log.d("teest", 1+"");
                 if (status.equals("end")) {
                     collideNum = 0;
                 }
@@ -246,7 +247,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 return true;
             // 手指離開回到normal
             case MotionEvent.ACTION_UP:
-                Log.d("teest", 3+"");
                 if (status.equals("run")) {
                     accPlayer.pause();
                     brakePlayer.pause();
@@ -437,6 +437,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawText(value ,(float) x, (float) y, paint);
     }
 
+    // 畫出長條圖
     public void drawBar(Canvas canvas, double value, double x, double y, String color, double length){
         Paint hollowPaint = new Paint();
         hollowPaint.setStyle(Paint.Style.STROKE);
@@ -491,6 +492,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     // 更新背景速度
     public void speedUpdate(){
         switch (speedState){
+            // 正常狀態
             case "normal":
                 if (backgroundSpeed > backgroundNormalSpeed) {
                     backgroundSpeed--;
@@ -499,12 +501,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     backgroundSpeed++;
                 }
                 return;
+            // 加速狀態
             case "accelerate":
                 backgroundSpeed ++;
                 if (backgroundSpeed >= backgroundMaxSpeed) {
                     backgroundSpeed=backgroundMaxSpeed;
                 }
                 return;
+            // 煞車狀態
             case "break":
                 backgroundSpeed -= 3;
                 if(backgroundSpeed <= 0){
@@ -513,6 +517,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    // 遊戲初始化
     public void initialize(){
         allBackground.initialize();
         player.initialize();
@@ -523,6 +528,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         backgroundSpeed = backgroundNormalSpeed;
     }
 
+    // 創造道具
     public void createPower(double centerX, double centerY, String type){
         if(type.equals("random")){
             Random random = new Random();
@@ -538,6 +544,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    // 暫停BGM
     public void pauseBGM(){
         if(status.equals("start")){
             start2Player.pause();
@@ -550,7 +557,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         brakePlayer.pause();
     }
 
-    int pauseTimes = 0;
+    // 重新開始BGM
     public void resumeBGM(){
         if(status.equals("start")){
 
@@ -569,7 +576,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         pauseTimes++;
     }
 
-
+    // 遊戲結束
     public void setGameover(){
         isGameover = true;
         bgm2Player.pause();
@@ -580,6 +587,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         status = "end";
     }
 
+    // 讓game知道現在有沒有freeze
     public void setFreeze(boolean isFreeze){
         this.isFreeze = isFreeze;
     }

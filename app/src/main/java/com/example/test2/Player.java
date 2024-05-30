@@ -76,6 +76,7 @@ class Player extends Character{
         }
     }
 
+    // 回傳現在有沒有護盾
     public boolean hasShield(){
         if(isShield){
             return true;
@@ -85,7 +86,7 @@ class Player extends Character{
         }
     }
 
-
+    // 吃到道具要做的事
     public void getPower(String type) {
         switch (type){
             case "shield":
@@ -176,6 +177,7 @@ class Player extends Character{
         }
     }
 
+    // 初始化
     public void initialize() {
         this.setCenterX(game.getWIDTH()/2);
         this.setBottomY(game.getHEIGHT()-100);

@@ -31,11 +31,13 @@ class AllBackground {
         }
     }
 
+    // 畫到畫布上
     public void draw(Canvas canvas){
         background1.draw(canvas);
         background2.draw(canvas);
     }
 
+    // 初始化
     public void initialize() {
         background1.setLeftX(0);
         background1.setTopY(0);

@@ -151,11 +151,9 @@ class AllCar {
     // 每一幀要做的事
     public void update(){
         if(allCarGroup.size() == 0) return;
-        Log.d("teest", nowNum+","+allCarGroup.size()+",900000");
         if(!creating){
             type = randomNumbers.nextInt(allGroupType.size());
             creating = true;
-            Log.d("abc", nowNum+":"+allCarGroup.get(nowNum).getTopCarY()+"");
         }
         else {
             // 判斷能生的時候就生車群
@@ -164,7 +162,6 @@ class AllCar {
                 creating = false;
             }
         }
-        Log.d("tag", game.getBackgroundSpeed()+"");
         for(CarGroup carGroup: allCarGroup){
             carGroup.update();
         }
@@ -189,6 +186,7 @@ class AllCar {
         }
     }
 
+    //初始化
     public void initialize() {
         allCarGroup.clear();
         nowNum = -1;

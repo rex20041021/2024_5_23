@@ -15,6 +15,7 @@ public class Power extends Character{
     Game game;
     boolean show = true;
 
+    // constructor
     public Power(Context context, double centerX, double centerY, String type, Game game){
         super(centerX, centerY);
         this.context = context;
@@ -32,26 +33,27 @@ public class Power extends Character{
                 this.setImageHeightAndWidth(img.getHeight(), img.getWidth());
                 break;
         }
-//        Log.d("power", img.getHeight()+","+img.getHeight());
-//        System.out.println(img.getHeight());
-//        System.out.println(img.getWidth());
+
     }
 
-
+    // 每一幀要做的事
     public void update() {
         this.setCenterY(this.getCenterY() + game.getBackgroundSpeed());
     }
 
+    // 畫到畫布上
     public void draw(Canvas canvas){
         if(show){
             super.drawImage(canvas, img);
         }
     }
 
+    // 回傳道具類型
     public String getType() {
         return type;
     }
 
+    // 設定畫面上看不看的到道具
     public void setVisble(boolean visble){
         show = visble;
     }

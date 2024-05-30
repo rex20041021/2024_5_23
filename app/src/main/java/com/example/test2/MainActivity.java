@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
     }
 
+    // onResume階段
     @Override
     public void onResume() {
         super.onResume();
