@@ -7,6 +7,7 @@ import androidx.core.content.pm.ShortcutInfoCompat;
 import android.app.Activity;
 import android.app.GameManager;
 import android.app.Service;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.hardware.Sensor;

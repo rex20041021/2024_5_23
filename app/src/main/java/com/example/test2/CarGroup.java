@@ -70,8 +70,12 @@ class CarGroup {
                     cars.add(new Car(context, allImages.get(color)[carType], laneCenterx[j], -10000+carImageHeight*i, game));
                 }
                 else {
-                    if(randomNumbers.nextInt(10) < 1){
+                    int value = randomNumbers.nextInt(10);
+                    if(value < 1){
                         game.createPower(laneCenterx[j], -10000+carImageHeight*i, "random");
+                    }
+                    else if (value < 2){
+                        game.createMoney(laneCenterx[j], -10000+carImageHeight*i);
                     }
                 }
             }
