@@ -1,8 +1,7 @@
-package com.example.test2;
+package com.example.freeway_monkey;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.Log;
 
 // 所有背景的管理員(其實也就兩個)
 class AllBackground {

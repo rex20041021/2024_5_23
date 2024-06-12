@@ -1,4 +1,4 @@
-package com.example.test2;
+package com.example.freeway_monkey;
 
 // 角色座標(長方形)
 public class CoordinateRect {

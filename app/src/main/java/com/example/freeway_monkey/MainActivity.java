@@ -1,27 +1,17 @@
-package com.example.test2;
+package com.example.freeway_monkey;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.pm.ShortcutInfoCompat;
 
-import android.app.Activity;
-import android.app.GameManager;
-import android.app.Service;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 // 最外面的那層acitivity(應該也不會動到)
 public class MainActivity extends AppCompatActivity implements SensorEventListener {

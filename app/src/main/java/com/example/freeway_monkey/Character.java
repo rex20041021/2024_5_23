@@ -1,4 +1,4 @@
-package com.example.test2;
+package com.example.freeway_monkey;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

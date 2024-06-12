@@ -1,19 +1,12 @@
-package com.example.test2;
+package com.example.freeway_monkey;
 
-import androidx.annotation.RequiresApi;
-import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.os.Vibrator;
 import android.media.MediaPlayer;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 

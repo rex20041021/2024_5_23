@@ -1,10 +1,7 @@
-package com.example.test2;
-
-import static android.content.Context.MODE_PRIVATE;
+package com.example.freeway_monkey;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class MyData {
     Context context;

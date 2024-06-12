@@ -6,7 +6,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.test2"
+        applicationId "com.example.freeway_monkey"
         minSdk 21
         targetSdk 34
         versionCode 1

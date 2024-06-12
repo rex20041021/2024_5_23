@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.test2">
+    package="com.example.freeway_monkey">
     <uses-permission android:name="android.permission.VIBRATE" />
 
 
@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Test2">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.freeway_monkey.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>

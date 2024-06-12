@@ -1,10 +1,7 @@
-package com.example.test2;
+package com.example.freeway_monkey;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
-
-import java.util.Observer;
 
 /*
 !!!!!
